@@ -12,7 +12,6 @@ import {
 import customersRouter from "./enpoints/customers/index.js";
 
 dotenv.config();
-
 const server = express();
 const PORT = process.env.PORT || 3001;
 
@@ -35,8 +34,10 @@ server.use(genericErrorHandler);
 
 //  ======== connections
 
+const connection = process.env.DB_CONNECTION;
+
 try {
-    mongoose.connect(`${process.env.DB_CONNECTION}`);
+    mongoose.connect(connection);
     server.listen(PORT, () => {
         console.table(listEnpoints(server));
         console.log(`server is running on port n. ${PORT}`);
