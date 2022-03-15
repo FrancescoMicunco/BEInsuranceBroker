@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import listEnpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -10,8 +10,8 @@ import {
     genericErrorHandler,
 } from "../src/middleware/errorHandler.js";
 import customersRouter from "./enpoints/customers/index.js";
+import companyRouter from "./enpoints/companies/index.js";
 
-dotenv.config();
 const server = express();
 const PORT = process.env.PORT || 3001;
 
@@ -26,6 +26,8 @@ server.use(passport.initialize());
 //  ========= Endpoints
 
 server.use("/customers", customersRouter);
+
+server.use("/companies", companyRouter);
 
 //  ========== errors
 server.use(badRequestHandler);
