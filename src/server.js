@@ -11,6 +11,8 @@ import {
 } from "../src/middleware/errorHandler.js";
 import customersRouter from "./enpoints/customers/index.js";
 import companyRouter from "./enpoints/companies/index.js";
+import salesforceRouter from "./enpoints/salsesforce/index.js";
+import productsRouter from "./enpoints/products/index.js";
 
 const server = express();
 const PORT = process.env.PORT || 3001;
@@ -28,6 +30,10 @@ server.use(passport.initialize());
 server.use("/customers", customersRouter);
 
 server.use("/companies", companyRouter);
+
+server.use("/products", productsRouter);
+
+server.use("/salesforce", salesforceRouter);
 
 //  ========== errors
 server.use(badRequestHandler);

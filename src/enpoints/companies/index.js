@@ -27,6 +27,7 @@ router
 router
     .route("/:id")
     .get(async(req, res, next) => {
+        console.log("params", req.params.id);
         try {
             const company = await companyModel.findById(req.params.id);
             if (company === null) {
