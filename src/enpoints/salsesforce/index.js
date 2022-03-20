@@ -39,33 +39,35 @@ router
             next(error);
         }
     })
-    .delete(async(req, res, next) => {
-        try {
-            const seller = await salesforceModel.findByIdAndDelete(req.params.id);
-            console.log("seller correctly deleted!");
-            if (seller) {
-                res.send(201);
-            } else {
-                res.send("seller not found!");
-            }
-        } catch (error) {
-            next(error);
+
+.delete(async(req, res, next) => {
+    try {
+        const seller = await salesforceModel.findByIdAndDelete(req.params.id);
+        console.log("seller correctly deleted!");
+        if (seller) {
+            res.send(201);
+        } else {
+            res.send("seller not found!");
         }
-    })
-    .put(async(req, res, next) => {
-        try {
-            const seller = await salesforceModel.findByIdAndUpdate(
-                req.params.id,
-                req.body, { new: true }
-            );
-            if (seller === null) {
-                ("this seller doesn't exist!");
-            } else {
-                res.send(seller);
-            }
-        } catch (error) {
-            next(error);
+    } catch (error) {
+        next(error);
+    }
+})
+
+.put(async(req, res, next) => {
+    try {
+        const seller = await salesforceModel.findByIdAndUpdate(
+            req.params.id,
+            req.body, { new: true }
+        );
+        if (seller === null) {
+            ("this seller doesn't exist!");
+        } else {
+            res.send(seller);
         }
-    });
+    } catch (error) {
+        next(error);
+    }
+});
 
 export default router;

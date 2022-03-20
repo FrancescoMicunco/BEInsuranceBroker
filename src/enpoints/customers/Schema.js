@@ -6,6 +6,7 @@ const { Schema, model } = mongoose;
 const customerSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
+    seller: [{ type: Schema.Types.ObjectId, ref: "Sales" }],
     role: {
         type: String,
         enum: ["User", "Salesforce", "Admin"],

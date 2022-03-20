@@ -5,11 +5,7 @@ const { Schema, model } = mongoose;
 
 const salesSchema = new Schema({
     name: { type: String, required: true },
-    area: {
-        type: String,
-        enum: ["Life", "Damage", "Healt"],
-        default: "Life",
-    },
+    last_name: { type: String, required: true },
 }, { timestamps: true });
 
 export default model("Sales", salesSchema);

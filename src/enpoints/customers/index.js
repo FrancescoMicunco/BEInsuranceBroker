@@ -18,7 +18,7 @@ router
 
 .get(async(req, res, next) => {
     try {
-        const customer = await customersModel.find();
+        const customer = await customersModel.find().populate({ path: "seller" });
         res.status(200).send(customer);
     } catch (error) {
         next(error);
@@ -28,6 +28,7 @@ router
 router
     .route("/:id")
     .get(async(req, res, next) => {
+        console.log("req.params", req.params);
         try {
             const customer = await customersModel.findById(req.params.id);
             if (customer === null) {

@@ -19,6 +19,8 @@ router
 .get(async(req, res, next) => {
     try {
         const product = await productsModel.find();
+        // .populate({ path: "seller" })
+        // .populate({ path: "customer" });
         res.status(200).send(product);
     } catch (error) {
         next(error);
@@ -29,7 +31,10 @@ router
     .route("/:id")
     .get(async(req, res, next) => {
         try {
-            const product = await productsModel.findById(req.params.id);
+            const product = await productsModel
+                .findById(req.params.id)
+                .populate({ path: "seller", upsert: "true" })
+                .populate({ path: "customer" });
             if (product === null) {
                 ("this product doesn't exist");
             } else {
