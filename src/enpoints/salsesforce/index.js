@@ -1,6 +1,7 @@
 import express from "express";
 import { isHttpError } from "http-errors";
 import salesforceModel from "../salsesforce/Schema.js";
+import q2m from "query-to-mongo";
 
 const router = express.Router();
 
@@ -17,8 +18,13 @@ router
     })
 
 .get(async(req, res, next) => {
+    const mongoQuery = q2m(req.query);
     try {
-        const seller = await salesforceModel.find();
+        const seller = await salesforceModel
+            .find(mongoQuery.criteria)
+            .sort(mongoQuery.options.sort)
+            .limit(mongoQuery.options.limit)
+            .skip(mongoQuery.options.skip);
         res.status(200).send(seller);
     } catch (error) {
         next(error);

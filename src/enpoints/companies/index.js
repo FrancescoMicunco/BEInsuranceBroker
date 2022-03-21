@@ -1,5 +1,6 @@
 import express from "express";
 import companyModel from "../companies/Schema.js";
+import q2m from "query-to-mongo";
 
 const router = express.Router();
 
@@ -16,8 +17,13 @@ router
     })
 
 .get(async(req, res, next) => {
+    const mongoQuery = q2m(req.query);
     try {
-        const companies = await companyModel.find();
+        const companies = await companyModel
+            .find(mongoQuery.criteria)
+            .sort(mongoQuery.options.sort)
+            .limit(mongoQuery.options.limit)
+            .skip(mongoQuery.options.skip);
         res.status(200).send(companies);
     } catch (error) {
         next(error);

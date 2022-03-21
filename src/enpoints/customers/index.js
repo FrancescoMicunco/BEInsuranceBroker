@@ -1,6 +1,7 @@
 import express from "express";
 import { isHttpError } from "http-errors";
 import customersModel from "../customers/Schema.js";
+import q2m from "query-to-mongo";
 
 const router = express.Router();
 
@@ -17,8 +18,15 @@ router
     })
 
 .get(async(req, res, next) => {
+    const mongoQuery = q2m(req.query);
+    console.log("query params", q2m(req.query));
     try {
-        const customer = await customersModel.find().populate({ path: "seller" });
+        const customer = await customersModel
+            .find(mongoQuery.criteria)
+            .sort(mongoQuery.options.sort)
+            .limit(mongoQuery.options.limit)
+            .skip(mongoQuery.options.skip)
+            .populate({ path: "seller" });
         res.status(200).send(customer);
     } catch (error) {
         next(error);
