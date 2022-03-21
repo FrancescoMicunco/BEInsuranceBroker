@@ -10,8 +10,8 @@ const customerSchema = new Schema({
     password: { type: String, required: true },
     email: { type: String, required: true },
     seller: [{ type: Schema.Types.ObjectId, ref: "Sales" }],
-    isPrivacy: { type: Boolean, required: true },
-    isCompliance: { type: Boolean, required: true },
+    isPrivacy: { type: Boolean, required: false, default: false },
+    isCompliance: { type: Boolean, required: false, default: false },
     role: {
         type: String,
         enum: ["User", "Salesforce", "Admin"],
