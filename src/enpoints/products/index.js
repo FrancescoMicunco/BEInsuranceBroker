@@ -19,16 +19,21 @@ router
 
 .get(async(req, res, next) => {
     const mongoQuery = q2m(req.query);
+    const total = await productsModel.countDocuments(mongoQuery.criteria);
     console.log("query params", q2m(req.query));
     try {
         const product = await productsModel
             .find(mongoQuery.criteria)
             .sort(mongoQuery.options.sort)
             .limit(mongoQuery.options.limit)
-            .skip(mongoQuery.options.skip);
-        // .populate({ path: "seller" })
-        // .populate({ path: "customer" });
-        res.status(200).send(product);
+            .skip(mongoQuery.options.skip)
+            .populate({ path: "seller" })
+            .populate({ path: "customer" });
+        res.status(200).send({
+            links: mongoQuery.links("/products", total),
+            total: Math.ceil(total / mongoQuery.options.limit),
+            product,
+        });
     } catch (error) {
         next(error);
     }
@@ -54,7 +59,7 @@ router
     .delete(async(req, res, next) => {
         try {
             const product = await productsModel.findByIdAndDelete(req.params.id);
-            console.log("product correctly deleted!");
+            console.log("Product correctly deleted!");
             if (product) {
                 res.send(200);
             } else {
