@@ -19,7 +19,8 @@ router
 
 .get(async(req, res, next) => {
     const mongoQuery = q2m(req.query);
-    console.log("query params", q2m(req.query));
+    const total = await customersModel.countDocuments(mongoQuery.criteria);
+
     try {
         const customer = await customersModel
             .find(mongoQuery.criteria)
@@ -27,7 +28,13 @@ router
             .limit(mongoQuery.options.limit)
             .skip(mongoQuery.options.skip)
             .populate({ path: "seller" });
-        res.status(200).send(customer);
+        res
+            .status(200)
+            .send({
+                links: mongoQuery.links("/customers", total),
+                total: Math.ceil(total / mongoQuery.options.limit),
+                customer,
+            });
     } catch (error) {
         next(error);
     }
