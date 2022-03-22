@@ -27,7 +27,7 @@ router
             .sort(mongoQuery.options.sort)
             .limit(mongoQuery.options.limit)
             .skip(mongoQuery.options.skip)
-            .populate({ path: "seller" })
+            // .populate({ path: "seller" })
             .populate({ path: "customer" });
         res.status(200).send({
             links: mongoQuery.links("/products", total),
