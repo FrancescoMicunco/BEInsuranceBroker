@@ -12,6 +12,12 @@ const customerSchema = new Schema({
     seller: [{ type: Schema.Types.ObjectId, ref: "Sales" }],
     isPrivacy: { type: Boolean, required: false, default: false },
     isCompliance: { type: Boolean, required: false, default: false },
+    purchasedHistory: [{
+        name: { type: String },
+        area: { type: String },
+        amount: { type: String },
+        purchasedDate: { type: Date },
+    }, ],
     role: {
         type: String,
         enum: ["User", "Salesforce", "Admin"],

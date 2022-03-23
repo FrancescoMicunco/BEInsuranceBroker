@@ -1,6 +1,7 @@
 import express from "express";
 import { isHttpError } from "http-errors";
 import customersModel from "../customers/Schema.js";
+import productsModel from "../products/Schema.js";
 import q2m from "query-to-mongo";
 
 const router = express.Router();
@@ -23,18 +24,18 @@ router
 
     try {
         const customer = await customersModel
-            .find(mongoQuery.criteria)
+            .find(mongoQuery.criteria, {
+                password: 0,
+            })
             .sort(mongoQuery.options.sort)
             .limit(mongoQuery.options.limit)
             .skip(mongoQuery.options.skip)
             .populate({ path: "seller" });
-        res
-            .status(200)
-            .send({
-                links: mongoQuery.links("/customers", total),
-                total: Math.ceil(total / mongoQuery.options.limit),
-                customer,
-            });
+        res.status(200).send({
+            links: mongoQuery.links("/customers", total),
+            total: Math.ceil(total / mongoQuery.options.limit),
+            customer,
+        });
     } catch (error) {
         next(error);
     }
@@ -45,7 +46,9 @@ router
     .get(async(req, res, next) => {
         console.log("req.params", req.params);
         try {
-            const customer = await customersModel.findById(req.params.id);
+            const customer = await customersModel.findById(req.params.id, {
+                password: 0,
+            });
             if (customer === null) {
                 ("this customer doesn't exist");
             } else {
@@ -83,5 +86,40 @@ router
             next(error);
         }
     });
+
+//  routes for history requests
+
+router
+    .get("/:id/purchasedHistory", async(req, res, next) => {
+        try {} catch (error) {
+            next(error);
+        }
+    })
+
+.post("/:id/purchasedHistory", async(req, res, next) => {
+    try {
+        const productPurchased = await productsModel.findById(
+            req.body.productId, { _id: 0 }
+        );
+        if (productPurchased) {
+            const productToSendInHistory = {
+                ...productPurchased.toObject(),
+                purchasedDate: new Date(),
+            };
+            const customerToAddHistory = await customersModel.findByIdAndUpdate(
+                req.params.id, { $push: { purchasedHistory: productToSendInHistory } }, { new: true }
+            );
+            if (customerToAddHistory) {
+                res.send(customerToAddHistory);
+            } else {
+                next(404, "this customer is not available");
+            }
+        } else {
+            next(404, "this product is not available");
+        }
+    } catch (error) {
+        next(error);
+    }
+});
 
 export default router;
