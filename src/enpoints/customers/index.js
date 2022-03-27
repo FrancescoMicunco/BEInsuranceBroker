@@ -27,7 +27,7 @@ router
             .find(mongoQuery.criteria, {
                 password: 0,
             })
-            .sort(mongoQuery.options.sort)
+            .sort(mongoQuery.options.sort || { createdAt: -1 })
             .limit(mongoQuery.options.limit)
             .skip(mongoQuery.options.skip)
             .populate({ path: "seller" });
@@ -91,7 +91,15 @@ router
 
 router
     .get("/:id/purchasedHistory", async(req, res, next) => {
-        try {} catch (error) {
+        console.log("get id", req.params.id);
+        try {
+            const customer = await customersModel.findById(req.params.id);
+            if (customer) {
+                res.send({ purchasedHistory: customer.purchasedHistory });
+            } else {
+                next(error);
+            }
+        } catch (error) {
             next(error);
         }
     })
@@ -122,4 +130,22 @@ router
     }
 });
 
+//  routes for statistic
+
+router.get("/stats", async(req, res, next) => {
+    const mongoQuery = q2m(req.query);
+    try {
+        const customer = await customersModel
+            .find(mongoQuery.criteria, {
+                password: 0,
+            })
+            .sort(mongoQuery.options.sort)
+            .limit(mongoQuery.options.limit)
+            .skip(mongoQuery.options.skip)
+            .populate({ path: "seller" });
+        res.status(200).send(customer);
+    } catch (error) {
+        next(error);
+    }
+});
 export default router;
