@@ -14,6 +14,8 @@ const companySchema = new Schema({
             required: true,
             enum: ["Life", "Healt", "Professional"],
         },
+        amount: { type: Number, required: true },
+        profit_margin: { type: Number, required: true },
         minAge: { type: String, required: true },
         maxAge: { type: String, required: true },
         minDuration: { type: String, required: true },
