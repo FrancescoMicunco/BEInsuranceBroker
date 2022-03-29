@@ -1,5 +1,6 @@
 import express from "express";
 import companyModel from "../companies/Schema.js";
+import productsCompanies from "../productsCompanies/Schema.js";
 import q2m from "query-to-mongo";
 
 const router = express.Router();
@@ -23,7 +24,8 @@ router
             .find(mongoQuery.criteria)
             .sort(mongoQuery.options.sort)
             .limit(mongoQuery.options.limit)
-            .skip(mongoQuery.options.skip);
+            .skip(mongoQuery.options.skip)
+            .populate({ path: "products" });
         res.status(200).send(companies);
     } catch (error) {
         next(error);
