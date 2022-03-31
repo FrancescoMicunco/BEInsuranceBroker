@@ -12,11 +12,11 @@ const customerSchema = new Schema({
     healt: { surgery: { type: Boolean }, medicine: { type: Boolean } },
     seller: [{ type: Schema.Types.ObjectId, ref: "Sales" }],
     isHealt: { type: Boolean, required: true },
-    gender: { type: String, required: true, enum: ["Male", "Female", "Other"] },
+    gender: { type: String, required: true, enum: ["MALE", "FEMALE", "OTHER"] },
     marital: {
         type: String,
         required: true,
-        enum: ["Married", "Divorced", "Separate", "Celibate/Maiden"],
+        enum: ["MARRIED", "DIVORCED", "SEPARATE", "CELIBATE/MAIDEN"],
     },
     isPrivacy: { type: Boolean, required: false, default: false },
     isCompliance: { type: Boolean, required: false, default: false },

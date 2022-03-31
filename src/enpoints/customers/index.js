@@ -109,6 +109,8 @@ router
         const productPurchased = await productsModel.findById(
             req.body.productId, { _id: 0 }
         );
+        console.log("product", productPurchased);
+
         if (productPurchased) {
             const productToSendInHistory = {
                 ...productPurchased.toObject(),
