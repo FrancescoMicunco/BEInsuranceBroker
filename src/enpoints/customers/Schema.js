@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const { Schema, model } = mongoose;
 
@@ -32,5 +33,37 @@ const customerSchema = new Schema({
         default: "User",
     },
 }, { timestamps: true });
+
+customerSchema.pre("save", async function(next) {
+    const newCustomer = this;
+    const plainPW = newCustomer.password;
+    if (newCustomer.isModified("password")) {
+        const hash = await bcrypt.hash(plainPW, 10);
+        newCustomer.password = hash;
+    }
+    next();
+});
+
+customerSchema.methods.toJSON = function() {
+    const customerDocument = this;
+    const customerObject = customerDocument.toObject();
+    delete customerObject.password;
+
+    return customerObject;
+};
+
+customerSchema.statics.checkCredentials = async function(userName, password) {
+    const customer = await this.findOne({ userName });
+    if (customer) {
+        const isPassword = await bcrypt.compare(password, customer.password);
+        if (isPassword) {
+            return customer;
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+};
 
 export default model("Customers", customerSchema);

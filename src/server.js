@@ -8,6 +8,8 @@ import {
     badRequestHandler,
     notFoundHandler,
     genericErrorHandler,
+    unauthorizedError,
+    forbiddendError,
 } from "../src/middleware/errorHandler.js";
 import customersRouter from "./enpoints/customers/index.js";
 import companyRouter from "./enpoints/companies/index.js";
@@ -39,6 +41,8 @@ server.use("/salesforce", salesforceRouter);
 server.use(badRequestHandler);
 server.use(notFoundHandler);
 server.use(genericErrorHandler);
+server.use(unauthorizedError);
+server.use(forbiddendError);
 
 //  ======== connections
 

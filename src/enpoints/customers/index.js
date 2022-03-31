@@ -3,6 +3,8 @@ import { isHttpError } from "http-errors";
 import customersModel from "../customers/Schema.js";
 import productsModel from "../products/Schema.js";
 import q2m from "query-to-mongo";
+import { basicAuthMiddleware } from "../../middleware/auth/basic.js";
+import { adminMiddleware } from "../../middleware/auth/admin.js";
 
 const router = express.Router();
 
@@ -18,7 +20,7 @@ router
         }
     })
 
-.get(async(req, res, next) => {
+.get(basicAuthMiddleware, adminMiddleware, async(req, res, next) => {
     const mongoQuery = q2m(req.query);
     const total = await customersModel.countDocuments(mongoQuery.criteria);
 
@@ -41,9 +43,13 @@ router
     }
 });
 
+router.route("/me").get(basicAuthMiddleware, async(req, res, next) => {
+    res.send(req.customer);
+});
+
 router
     .route("/:id")
-    .get(async(req, res, next) => {
+    .get(basicAuthMiddleware, adminMiddleware, async(req, res, next) => {
         console.log("req.params", req.params);
         try {
             const customer = await customersModel.findById(req.params.id, {
@@ -58,7 +64,7 @@ router
             next(error);
         }
     })
-    .delete(async(req, res, next) => {
+    .delete(basicAuthMiddleware, adminMiddleware, async(req, res, next) => {
         try {
             const customer = await customersModel.findByIdAndDelete(req.params.id);
             console.log("Customer correctly deleted!");
@@ -71,7 +77,7 @@ router
             next(error);
         }
     })
-    .put(async(req, res, next) => {
+    .put(basicAuthMiddleware, adminMiddleware, async(req, res, next) => {
         try {
             const customer = await customersModel.findByIdAndUpdate(
                 req.params.id,
