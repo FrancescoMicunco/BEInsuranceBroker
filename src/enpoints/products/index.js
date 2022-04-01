@@ -24,8 +24,8 @@ router
     try {
         const product = await productsModel
             .find(mongoQuery.criteria)
-            .sort(mongoQuery.options.sort)
-            .limit(mongoQuery.options.limit)
+            .sort(mongoQuery.options.sort || { createdAt: -1 })
+            // .limit(mongoQuery.options.limit)
             .skip(mongoQuery.options.skip)
             // .populate({ path: "seller" })
             .populate({ path: "customer" });

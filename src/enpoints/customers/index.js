@@ -28,7 +28,7 @@ router
                 password: 0,
             })
             .sort(mongoQuery.options.sort || { createdAt: -1 })
-            .limit(mongoQuery.options.limit)
+            //  .limit(mongoQuery.options.limit)
             .skip(mongoQuery.options.skip)
             .populate({ path: "seller" });
         res.status(200).send({
