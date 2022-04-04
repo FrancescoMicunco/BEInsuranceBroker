@@ -44,14 +44,16 @@ server.use(genericErrorHandler);
 
 const connection = process.env.DB_CONNECTION;
 
-try {
-    mongoose.connect(connection);
-    server.listen(PORT, () => {
-        console.table(listEnpoints(server));
-        console.log(`server is running on port n. ${PORT}`);
+mongoose
+    .connect(connection)
+    .then(() => {
+        server.listen(PORT, () => {
+            console.table(listEnpoints(server));
+            console.log(`server is running on port n. ${PORT}`);
+        });
+    })
+    .catch((error) => {
+        handleError(error);
     });
-} catch (error) {
-    handleError(error);
-}
 
 mongoose.set("bufferCommands", false);
