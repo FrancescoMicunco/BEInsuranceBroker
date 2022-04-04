@@ -53,7 +53,7 @@ mongoose
         });
     })
     .catch((error) => {
-        handleError(error);
+        console.log(error);
     });
 
 mongoose.set("bufferCommands", false);
