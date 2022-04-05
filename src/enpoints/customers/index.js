@@ -107,18 +107,19 @@ router
 .post("/:id/purchasedHistory", async(req, res, next) => {
     try {
         const productPurchased = await productsModel.findById(
-            req.body.productId, { _id: 0 }
+            req.body.productId, { _id: 0, customer: 0 }
         );
-        console.log("product", productPurchased);
 
         if (productPurchased) {
-            const productToSendInHistory = {
+            const productToSendInHistory = await {
                 ...productPurchased.toObject(),
-                purchasedDate: new Date(),
+                    purchasedDate: new Date(),
             };
+
             const customerToAddHistory = await customersModel.findByIdAndUpdate(
                 req.params.id, { $push: { purchasedHistory: productToSendInHistory } }, { new: true }
             );
+
             if (customerToAddHistory) {
                 res.send(customerToAddHistory);
             } else {

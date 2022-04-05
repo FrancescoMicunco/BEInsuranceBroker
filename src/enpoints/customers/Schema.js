@@ -21,7 +21,7 @@ const customerSchema = new Schema({
     isPrivacy: { type: Boolean, required: false, default: false },
     isCompliance: { type: Boolean, required: false, default: false },
     purchasedHistory: [{
-        productName: { type: String },
+        productName: { type: Array },
         area: { type: String },
         amount: { type: String },
         purchasedDate: { type: Date },
