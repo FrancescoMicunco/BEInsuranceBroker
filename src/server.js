@@ -1,6 +1,6 @@
 import express from "express";
 import "dotenv/config";
-import listEnpoints from "express-list-endpoints";
+import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
 import passport from "passport";
