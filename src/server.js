@@ -48,7 +48,7 @@ mongoose
     .connect(connection)
     .then(() => {
         server.listen(PORT, () => {
-            console.table(listEnpoints(server));
+            console.table(listEndpoints(server));
             console.log(`server is running on port n. ${PORT}`);
         });
     })
